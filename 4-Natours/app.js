@@ -14,4 +14,11 @@ app.use(express.static(`public`));
 app.use('/api/v1/tours', tourRoute);
 app.use('/api/v1/users', userRoute);
 
+app.all('*', (req, res, next) => {
+    res.status(404).json({
+        status: 'failed',
+        message: `Can't find ${req.originalUrl} in this server!!`,
+    });
+    next();
+});
 module.exports = app;
