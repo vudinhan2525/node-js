@@ -11,7 +11,13 @@ const tourSchema = new mongoose.Schema(
             required: [true, 'A tour must have a name'],
             unique: true,
             trim: true,
-            validate: [validator.isAlpha, "Tour name mustn't have a number character"],
+            validate: {
+                validator: function (val) {
+                    const value = val.split(' ').join('');
+                    return validator.isAlpha(value);
+                },
+                message: "Tour name mustn't have a number character",
+            },
         },
         slug: String,
         duration: {

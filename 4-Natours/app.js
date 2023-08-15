@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const tourRoute = require('./routes/tourRoute');
 const userRoute = require('./routes/userRoute');
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controller/errorController');
 
 const app = express();
 // 1) Middle Ware
@@ -15,10 +17,7 @@ app.use('/api/v1/tours', tourRoute);
 app.use('/api/v1/users', userRoute);
 
 app.all('*', (req, res, next) => {
-    res.status(404).json({
-        status: 'failed',
-        message: `Can't find ${req.originalUrl} in this server!!`,
-    });
-    next();
+    next(new AppError(`Can't find ${req.originalUrl} in this server!!`, 404));
 });
+app.use(globalErrorHandler);
 module.exports = app;

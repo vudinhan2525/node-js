@@ -1,5 +1,3 @@
-const fs = require('fs');
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf-8'));
 exports.getAllUsers = (req, res) => {
     res.status(500).json({
         status: 'error',
