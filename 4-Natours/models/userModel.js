@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
             message: 'Email is invalid',
         },
     },
+    role: {
+        type: String,
+        enum: ['user', 'admin', 'guide', 'lead-guide'],
+        default: 'user',
+    },
     password: {
         type: String,
         required: [true, 'User must have a password'],
@@ -38,6 +43,7 @@ const userSchema = new mongoose.Schema({
             message: 'Password confirm not true',
         },
     },
+    passwordChangeAt: Date,
     photo: {
         type: String,
     },
@@ -51,6 +57,13 @@ userSchema.pre('save', async function (next) {
 });
 userSchema.methods.correctPassword = async function (duplicatePassword, password) {
     return await bcrypt.compare(duplicatePassword, password);
+};
+userSchema.methods.verifyPasswordChanged = function (JWTTimeCreate) {
+    if (this.passwordChangeAt) {
+        const time = parseInt(this.passwordChangeAt.getTime() / 1000, 10);
+        return JWTTimeCreate < time;
+    }
+    return false;
 };
 const User = mongoose.model('User', userSchema);
 module.exports = User;
