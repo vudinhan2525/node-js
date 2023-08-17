@@ -58,6 +58,11 @@ userSchema.pre('save', async function (next) {
     this.passwordConfirm = undefined;
     next();
 });
+userSchema.pre('save', function (next) {
+    if (!this.isModified('password') || this.isNew) return next();
+    this.passwordChangeAt = Date.now() - 3000;
+    next();
+});
 userSchema.methods.correctPassword = async function (duplicatePassword, password) {
     return await bcrypt.compare(duplicatePassword, password);
 };
