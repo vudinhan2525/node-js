@@ -50,6 +50,11 @@ const userSchema = new mongoose.Schema({
     photo: {
         type: String,
     },
+    active: {
+        type: Boolean,
+        default: true,
+        select: false,
+    },
 });
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
@@ -61,6 +66,10 @@ userSchema.pre('save', async function (next) {
 userSchema.pre('save', function (next) {
     if (!this.isModified('password') || this.isNew) return next();
     this.passwordChangeAt = Date.now() - 3000;
+    next();
+});
+userSchema.pre(/^find/, function (next) {
+    this.find({ active: { $ne: false } });
     next();
 });
 userSchema.methods.correctPassword = async function (duplicatePassword, password) {
