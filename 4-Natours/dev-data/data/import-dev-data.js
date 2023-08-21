@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Tour = require('../../models/tourModel');
 
-const tours = JSON.parse(fs.readFileSync('./dev-data/data/tours-simple.json', 'utf-8'));
+const tours = JSON.parse(fs.readFileSync('./dev-data/data/tours.json', 'utf-8'));
 exports.importData = async () => {
     try {
         await Tour.create(tours);

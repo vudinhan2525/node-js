@@ -24,7 +24,7 @@ exports.getAllTours = catchAsync(async (req, res) => {
     });
 });
 exports.getOneTour = catchAsync(async (req, res, next) => {
-    const tour = await Tour.findOne({ _id: req.params.id });
+    const tour = await Tour.findOne({ _id: req.params.id }).populate('reviews');
     if (!tour) {
         return next(new AppError(`Can't find this id`, 404));
     }
