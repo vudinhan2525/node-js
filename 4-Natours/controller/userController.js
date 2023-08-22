@@ -12,14 +12,6 @@ const FilterObj = (obj, ...Fields) => {
     });
     return newObj;
 };
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-    const users = await User.find();
-    res.status(200).json({
-        status: 'success',
-        results: users.length,
-        data: users,
-    });
-});
 exports.updateMe = catchAsync(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm) {
         return next(new AppError('This route is not for change password', 400));
@@ -31,17 +23,13 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         data: userUpdated,
     });
 });
+exports.getAllUsers = factory.getAll(User);
 exports.deleteMe = catchAsync(async (req, res, next) => {
     await User.findByIdAndUpdate(req.user.id, { active: false });
     res.status(200).json({
         status: 'success',
     });
 });
-exports.getOneUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'Failed',
-    });
-};
+exports.getOneUser = factory.getOne(User);
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);

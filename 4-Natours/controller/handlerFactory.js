@@ -1,6 +1,23 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const APIFeature = require('../utils/apiFeature');
 
+exports.getAll = (Model) =>
+    catchAsync(async (req, res) => {
+        //Just for reviewController
+        let filter = {};
+        if (req.params.tourId) filter = { tour: req.params.tourId };
+
+        //Common
+        const features = new APIFeature(Model.find(filter), req.query);
+        features.filter().sort().fields().pagination();
+        const doc = await features.query;
+        res.status(200).json({
+            status: 'success',
+            results: doc.length,
+            data: doc,
+        });
+    });
 exports.deleteOne = (Model) =>
     catchAsync(async (req, res, next) => {
         const doc = await Model.findByIdAndDelete(req.params.id);
