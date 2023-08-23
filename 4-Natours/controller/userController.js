@@ -23,6 +23,10 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         data: userUpdated,
     });
 });
+exports.getMe = (req, res, next) => {
+    req.params.id = req.user.id;
+    next();
+};
 exports.getAllUsers = factory.getAll(User);
 exports.deleteMe = catchAsync(async (req, res, next) => {
     await User.findByIdAndUpdate(req.user.id, { active: false });
