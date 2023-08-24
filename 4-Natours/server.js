@@ -7,7 +7,10 @@ process.on('uncaughtException', (err) => {
     console.log(err.name, err.message);
     process.exit(1);
 });
-const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
+const DB = process.env.DATABASE.replace(
+    '<PASSWORD>',
+    process.env.DATABASE_PASSWORD,
+);
 mongoose.connect(DB);
 
 const obj = require('./dev-data/data/import-dev-data');

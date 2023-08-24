@@ -53,7 +53,10 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
         },
         {
             $match: {
-                startDates: { $gte: new Date(`${year}-01-01`), $lte: new Date(`${year}-12-31`) },
+                startDates: {
+                    $gte: new Date(`${year}-01-01`),
+                    $lte: new Date(`${year}-12-31`),
+                },
             },
         },
         {
@@ -89,7 +92,9 @@ exports.getTourWithin = catchAsync(async (req, res, next) => {
     if (!lat || !lng) {
         return next(new AppError('Please provide your position!!', 400));
     }
-    const tours = await Tour.find({ startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } } });
+    const tours = await Tour.find({
+        startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+    });
     res.status(200).json({
         status: 'success',
         length: tours.length,
