@@ -364,6 +364,7 @@ body {
 
 .header__hero {
     height: 100%;
+    user-select: none;
 }
 
 .header__hero-img {

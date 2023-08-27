@@ -17,7 +17,10 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         return next(new AppError('This route is not for change password', 400));
     }
     const updatedData = FilterObj(req.body, 'email', 'name');
-    const userUpdated = await User.findByIdAndUpdate(req.user.id, updatedData, { new: true, runValidators: true });
+    const userUpdated = await User.findByIdAndUpdate(req.user.id, updatedData, {
+        new: true,
+        runValidators: true,
+    });
     res.status(200).json({
         status: 'success',
         data: userUpdated,
