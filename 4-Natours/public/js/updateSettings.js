@@ -18,4 +18,26 @@ const updateData = async (name, email) => {
         createAlert('error', error.response.data.message);
     }
 };
-export { updateData };
+const updatePasswordData = async (
+    password,
+    newPassword,
+    newPasswordConfirm,
+) => {
+    try {
+        const res = await axios({
+            method: 'PATCH',
+            url: 'http://127.0.0.1:8000/api/v1/users/updatePassword',
+            data: {
+                password,
+                newPassword,
+                newPasswordConfirm,
+            },
+        });
+        if (res.data.status === 'success') {
+            createAlert('success', 'Update password successfully!!!');
+        }
+    } catch (error) {
+        createAlert('error', error.response.data.message);
+    }
+};
+export { updateData, updatePasswordData };

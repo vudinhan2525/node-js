@@ -2199,7 +2199,25 @@
         createAlert("success", "Update user data successfully!!");
       }
     } catch (error) {
-      createAlert("error", "Update user data failed");
+      createAlert("error", error.response.data.message);
+    }
+  };
+  var updatePasswordData = async (password, newPassword, newPasswordConfirm) => {
+    try {
+      const res = await axios_default({
+        method: "PATCH",
+        url: "http://127.0.0.1:8000/api/v1/users/updatePassword",
+        data: {
+          password,
+          newPassword,
+          newPasswordConfirm
+        }
+      });
+      if (res.data.status === "success") {
+        createAlert("success", "Update password successfully!!!");
+      }
+    } catch (error) {
+      createAlert("error", error.response.data.message);
     }
   };
 
@@ -2208,6 +2226,7 @@
   var form = document.querySelector(".login-form .form");
   var logoutBtn = document.querySelector(".nav__el--logout");
   var updateDataForm = document.querySelector(".form-user-data");
+  var updatePasswordForm = document.querySelector(".form-user-settings");
   if (mapBox) {
     const locationsData = JSON.parse(mapBox.getAttribute("data"));
     displayMap(locationsData);
@@ -2229,6 +2248,20 @@
       const email = document.querySelector("#email").value;
       const name = document.querySelector("#name").value;
       updateData(name, email);
+    });
+  }
+  if (updatePasswordForm) {
+    updatePasswordForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const password = document.querySelector("#password-current").value;
+      const newPassword = document.querySelector("#password").value;
+      document.querySelector(".btn-save-password").innerText = "...UPDATING";
+      const newPasswordConfirm = document.querySelector("#password-confirm").value;
+      await updatePasswordData(password, newPassword, newPasswordConfirm);
+      document.querySelector("#password-current").value = "";
+      document.querySelector("#password").value = "";
+      document.querySelector("#password-confirm").value = "";
+      document.querySelector(".btn-save-password").innerText = "SAVE PASSWORD";
     });
   }
 })();
