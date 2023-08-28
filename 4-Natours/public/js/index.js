@@ -7,6 +7,7 @@ const form = document.querySelector('.login-form .form');
 const logoutBtn = document.querySelector('.nav__el--logout');
 const updateDataForm = document.querySelector('.form-user-data');
 const updatePasswordForm = document.querySelector('.form-user-settings');
+const photoInput = document.querySelector('.form__upload');
 
 if (mapBox) {
     const locationsData = JSON.parse(mapBox.getAttribute('data'));
@@ -26,9 +27,20 @@ if (logoutBtn) {
 if (updateDataForm) {
     updateDataForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const email = document.querySelector('#email').value;
-        const name = document.querySelector('#name').value;
-        updateData(name, email);
+        const form = new FormData();
+        form.append('email', document.querySelector('#email').value);
+        form.append('name', document.querySelector('#name').value);
+        form.append('photo', document.querySelector('#photo').files[0]);
+        updateData(form);
+    });
+}
+if (photoInput) {
+    photoInput.addEventListener('change', (e) => {
+        const fileName = document.querySelector('#photo').files[0].name;
+        const labelUploadPhoto = document.querySelector(
+            '.form__label__uploadphoto',
+        );
+        labelUploadPhoto.innerText = fileName;
     });
 }
 if (updatePasswordForm) {

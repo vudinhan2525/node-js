@@ -2185,15 +2185,12 @@
   };
 
   // public/js/updateSettings.js
-  var updateData = async (name, email) => {
+  var updateData = async (data) => {
     try {
       const res = await axios_default({
         method: "PATCH",
         url: "http://127.0.0.1:8000/api/v1/users/updateMe",
-        data: {
-          name,
-          email
-        }
+        data
       });
       if (res.data.status === "success") {
         createAlert("success", "Update user data successfully!!");
@@ -2227,6 +2224,7 @@
   var logoutBtn = document.querySelector(".nav__el--logout");
   var updateDataForm = document.querySelector(".form-user-data");
   var updatePasswordForm = document.querySelector(".form-user-settings");
+  var photoInput = document.querySelector(".form__upload");
   if (mapBox) {
     const locationsData = JSON.parse(mapBox.getAttribute("data"));
     displayMap(locationsData);
@@ -2245,9 +2243,20 @@
   if (updateDataForm) {
     updateDataForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const email = document.querySelector("#email").value;
-      const name = document.querySelector("#name").value;
-      updateData(name, email);
+      const form2 = new FormData();
+      form2.append("email", document.querySelector("#email").value);
+      form2.append("name", document.querySelector("#name").value);
+      form2.append("photo", document.querySelector("#photo").files[0]);
+      updateData(form2);
+    });
+  }
+  if (photoInput) {
+    photoInput.addEventListener("change", (e) => {
+      const fileName = document.querySelector("#photo").files[0].name;
+      const labelUploadPhoto = document.querySelector(
+        ".form__label__uploadphoto"
+      );
+      labelUploadPhoto.innerText = fileName;
     });
   }
   if (updatePasswordForm) {

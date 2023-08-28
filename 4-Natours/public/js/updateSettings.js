@@ -1,15 +1,12 @@
 /* eslint-disable */
 import axios from 'axios';
 import { createAlert } from './alert';
-const updateData = async (name, email) => {
+const updateData = async (data) => {
     try {
         const res = await axios({
             method: 'PATCH',
             url: 'http://127.0.0.1:8000/api/v1/users/updateMe',
-            data: {
-                name,
-                email,
-            },
+            data,
         });
         if (res.data.status === 'success') {
             createAlert('success', 'Update user data successfully!!');
