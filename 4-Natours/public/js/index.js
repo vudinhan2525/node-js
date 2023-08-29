@@ -2,13 +2,14 @@
 import { displayMap } from './leaflet';
 import { login, logout } from './login';
 import { updateData, updatePasswordData } from './updateSettings';
+import { getSessions } from './stripe';
 const mapBox = document.getElementById('map');
 const form = document.querySelector('.login-form .form');
 const logoutBtn = document.querySelector('.nav__el--logout');
 const updateDataForm = document.querySelector('.form-user-data');
 const updatePasswordForm = document.querySelector('.form-user-settings');
 const photoInput = document.querySelector('.form__upload');
-
+const bookTourBtn = document.querySelector('#book-tour-btn');
 if (mapBox) {
     const locationsData = JSON.parse(mapBox.getAttribute('data'));
     displayMap(locationsData);
@@ -57,5 +58,11 @@ if (updatePasswordForm) {
         document.querySelector('#password-confirm').value = '';
         document.querySelector('.btn-save-password').innerText =
             'SAVE PASSWORD';
+    });
+}
+if (bookTourBtn) {
+    bookTourBtn.addEventListener('click', async (e) => {
+        e.target.innerText = 'PROCESSING...';
+        await getSessions(e.target.getAttribute('data'));
     });
 }

@@ -15,6 +15,7 @@ const tourRoute = require('./routes/tourRoute');
 const userRoute = require('./routes/userRoute');
 const viewRoute = require('./routes/viewRoute');
 const reviewRoute = require('./routes/reviewRoute');
+const bookingRoute = require('./routes/bookingRoute');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
 
@@ -22,7 +23,11 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 // 1) Middle Ware
-const scriptSrcUrls = ['https://unpkg.com/', 'https://tile.openstreetmap.org'];
+const scriptSrcUrls = [
+    'https://unpkg.com/',
+    'https://tile.openstreetmap.org',
+    'https://js.stripe.com/v3/',
+];
 const styleSrcUrls = [
     'https://unpkg.com/',
     'https://tile.openstreetmap.org',
@@ -36,14 +41,25 @@ const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
-            defaultSrc: [],
+            defaultSrc: ["'self'"],
             connectSrc: ["'self'", ...connectSrcUrls],
             scriptSrc: ["'self'", ...scriptSrcUrls],
             styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
-            workerSrc: ["'self'", 'blob:'],
+            workerSrc: ["'self'", 'blob:', 'https://*.stripe.com'],
             objectSrc: [],
             imgSrc: ["'self'", 'blob:', 'data:', 'https:'],
             fontSrc: ["'self'", ...fontSrcUrls],
+            frameSrc: [
+                'self',
+                'unsafe-inline',
+                'data:',
+                'blob:',
+                'https://*.stripe.com',
+                'https://*.mapbox.com',
+                'https://*.cloudflare.com/',
+                'https://bundle.js:*',
+                'ws://localhost:*/',
+            ],
         },
     }),
 );
@@ -67,6 +83,7 @@ app.use('/', viewRoute);
 app.use('/api/v1/tours', tourRoute);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/reviews', reviewRoute);
+app.use('/api/v1/bookings', bookingRoute);
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} in this server!!`, 404));
 });
