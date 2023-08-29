@@ -38,6 +38,7 @@ const connectSrcUrls = ['https://unpkg.com', 'https://tile.openstreetmap.org'];
 const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 //set security http headers
+//for you
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
