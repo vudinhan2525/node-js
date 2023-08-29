@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 // eslint-disable-next-line import/no-extraneous-dependencies
+const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const helmet = require('helmet');
@@ -21,8 +22,16 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
 
 const app = express();
+//app.enable('trust proxy');
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+const corsOptions = {
+    origin: '*',
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 // 1) Middle Ware
 const scriptSrcUrls = [
     'https://unpkg.com/',

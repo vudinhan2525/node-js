@@ -12,7 +12,7 @@ const signToken = (id) =>
     jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE_IN,
     });
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
     const token = signToken(user._id);
     const cookieOptions = {
         expires: new Date(
@@ -39,7 +39,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
     const url = `${req.protocol}://${req.get('host')}/me`;
     await new Email(newUser, url).sendWelcome();
-    createSendToken(newUser, 201, res);
+    createSendToken(newUser, 201, req, res);
 });
 exports.login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
@@ -52,7 +52,7 @@ exports.login = catchAsync(async (req, res, next) => {
     if (!user || !(await user.correctPassword(password, user.password))) {
         return next(new AppError('Email or password is incorrect!'), 401);
     }
-    createSendToken(user, 200, res);
+    createSendToken(user, 200, req, res);
 });
 exports.logout = (req, res, next) => {
     res.cookie('jwt', 'loggedout', {
@@ -190,7 +190,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     //3) Update passwordchangeat property for user
     await user.save();
     //4) Send back token for user
-    createSendToken(user, 200, res);
+    createSendToken(user, 200, req, res);
 });
 exports.updatePassword = catchAsync(async (req, res, next) => {
     //1) Get user from collection
@@ -204,5 +204,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     user.passwordConfirm = req.body.newPasswordConfirm;
     await user.save();
     //4) Send back token for user
-    createSendToken(user, 200, res);
+    createSendToken(user, 200, req, res);
 });
