@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const mongoSanitize = require('express-mongo-sanitize');
 // eslint-disable-next-line import/no-extraneous-dependencies
+const compression = require('compression');
 const hpp = require('hpp');
 const tourRoute = require('./routes/tourRoute');
 const userRoute = require('./routes/userRoute');
@@ -64,6 +65,7 @@ app.use(
         },
     }),
 );
+
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
@@ -79,6 +81,7 @@ app.use(cookieParser());
 app.use(mongoSanitize());
 app.use(hpp());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(compression());
 // 2) Route Handler
 app.use('/', viewRoute);
 app.use('/api/v1/tours', tourRoute);
