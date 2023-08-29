@@ -17,6 +17,7 @@ const bookingSchema = new mongoose.Schema({
     },
     createAt: {
         type: Date,
+        //ex
         default: Date.now(),
     },
     paid: {
